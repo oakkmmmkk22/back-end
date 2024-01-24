@@ -60,8 +60,6 @@ def create_std():
     }
     for g in std_all :
         ddd = str(new_student["_id"])
-        print(ddd)
-        print(g["_id"])
         if g["_id"] == ddd :
             return jsonify({"error":"Cannot create new student"}),500
     std_all.append(new_student)
