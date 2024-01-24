@@ -80,7 +80,7 @@ def update_std(std_id):
     if std:
         data = request.get_json()
         std.update(data)
-        collection.update_many( {"_id":std_id},
+        collection.update_many( {"_id":std["_id"]},
                                 {"$set":{"fullname":std["fullname"],
                                         "major":std["major"],
                                         "gpa":std["gpa"]
@@ -93,15 +93,17 @@ def update_std(std_id):
 
 
 
-@app.route("/books/<int:book_id>",methods=["DELETE"])
+@app.route("/students/<int:std_id>",methods=["DELETE"])
 @basic_auth.required
-def delete_std(book_id):
-    book = next((b for b in books if b["id"]==book_id),None)
-    if book:
-        books.remove(book)
-        return jsonify({"message":"Book deleted successfully"}),200
+def delete_std(std_id):
+    std_id = str(std_id)
+    std = next((b for b in std_all if b["_id"]==std_id),None)
+    if std:
+        std_all.remove(std)
+        collection.delete_one({"_id":std_id})
+        return jsonify({"message":"Student deleted successfully"}),200
     else:
-        return jsonify({"error":"Book not found"}),404
+        return jsonify({"error":"Student not found"}),404
     
 
 
