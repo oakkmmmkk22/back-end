@@ -7,6 +7,10 @@ client = MongoClient(uri)
 
 app = Flask(__name__) 
 
+app.config['BASIC_AUTH_USERNAME']='username'
+app.config['BASIC_AUTH_PASSWORD']='password'
+basic_auth = BasicAuth(app)
+
 db = client["students"]
 collection = db["std_info"]
 all_students = collection.find()
@@ -22,6 +26,7 @@ def Greet():
     return "<p>Welcome to Students Management API</p>"
 
 @app.route("/students",methods=["GET"])
+@basic_auth.required
 def get_all_books():
     for std in all_students:
         stdd.append(std)
