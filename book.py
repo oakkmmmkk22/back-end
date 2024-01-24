@@ -1,4 +1,5 @@
 from flask import request,Flask,jsonify
+from flask_basicauth import BasicAuth
 
 from pymongo.mongo_client import MongoClient
 uri = "mongodb+srv://mongo:mongo@cluster0.jhgevbw.mongodb.net/"
