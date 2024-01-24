@@ -52,13 +52,26 @@ def get_std(std_id):
 @basic_auth.required
 def create_std():
     data = request.get_json()
-    new_book={
-        "id":len(books)+1,
-        "title":data["title"],
-        "author":data["author"]
+    new_student={
+        "_id":data["_id"],
+        "fullname":data["fullname"],
+        "major":data["major"],
+        "gpa" : data["gpa"]
     }
-    books.append(new_book)
-    return jsonify(new_book),201
+    for g in std_all :
+        ddd = str(new_student["_id"])
+        print(ddd)
+        print(g["_id"])
+        if g["_id"] == ddd :
+            return jsonify({"error":"Cannot create new student"}),500
+    std_all.append(new_student)
+    # all_students.append(new_student)
+    collection.insert_one({ "_id":data["_id"],
+                            "fullname":data["fullname"],
+                            "major":data["major"],
+                            "gpa":data["gpa"]
+                            })
+    return jsonify(new_student),200
 
 @app.route("/books/<int:book_id>",methods=["PUT"])
 @basic_auth.required
