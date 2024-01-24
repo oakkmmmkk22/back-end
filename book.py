@@ -65,7 +65,6 @@ def create_std():
         if g["_id"] == ddd :
             return jsonify({"error":"Cannot create new student"}),500
     std_all.append(new_student)
-    # all_students.append(new_student)
     collection.insert_one({ "_id":data["_id"],
                             "fullname":data["fullname"],
                             "major":data["major"],
@@ -73,16 +72,23 @@ def create_std():
                             })
     return jsonify(new_student),200
 
-@app.route("/books/<int:book_id>",methods=["PUT"])
+@app.route("/students/<int:std_id>",methods=["PUT"])
 @basic_auth.required
-def update_std(book_id):
-    book = next((b for b in books if b["id"]==book_id),None)
-    if book:
+def update_std(std_id):
+    std_id = str(std_id)
+    std = next((b for b in std_all if b["_id"]==std_id),None)
+    if std:
         data = request.get_json()
-        book.update(data)
-        return jsonify(book)
+        std.update(data)
+        collection.update_many( {"_id":std_id},
+                                {"$set":{"fullname":std["fullname"],
+                                        "major":std["major"],
+                                        "gpa":std["gpa"]
+                                        }
+                                })
+        return jsonify(std),200
     else:
-        return jsonify({"error":"Book not found"}),404
+        return jsonify({"error":"Student not found"}),404
 
 
 
